@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class WeightedList<type>
 {
     public int count;
@@ -16,7 +14,7 @@ public class WeightedList<type>
         this.array = array;
         this.weights = weights;
         count = array.Length - 1;
-        Sort();
+        //Sort(); // is sort needed?
         CalculateCDF();
     }
 
@@ -33,7 +31,7 @@ public class WeightedList<type>
             newIntArray[i] = weights[i];
         }
         count = num;
-        Sort(); // TODO fix sort, bianary search?
+        //Sort(); // is sort needed?
         CalculateCDF();
     }
 
@@ -44,6 +42,7 @@ public class WeightedList<type>
 
     public type Get(int weight)
     {
+        weight++;
         int low = 0;
         int high = array.Length - 1;
         int i = 0;
@@ -57,8 +56,9 @@ public class WeightedList<type>
             if (value > weight) { high = i - 1; }
             else { low = i + 1; }
         }
+        i = low + (high - low) / 2;
         if (i > array.Length - 1) { throw new ("Weight out of bounds"); } 
-        else { return array[i]; }
+        else { return array[i]; } // TODO fix this returning wrong
     }
 
     private void CalculateCDF()

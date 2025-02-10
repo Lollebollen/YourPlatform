@@ -108,7 +108,7 @@ public class ObjectPanel : MonoBehaviour
         animator.Play("Remove");
     }
 
-    private void ShowPanel()
+    public void ShowPanel()
     {
         PlacedOnePlatform?.Invoke();
         animator.enabled = true;

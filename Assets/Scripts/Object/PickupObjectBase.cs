@@ -14,5 +14,6 @@ public class PickupObjectBase : MonoBehaviour
     {
         // TODO play audip clip
         Destroy(gameObject);
+        Destroy(transform.parent.gameObject.GetComponent<SpriteRenderer>());
     }
 }

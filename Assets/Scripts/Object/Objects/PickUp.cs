@@ -9,13 +9,13 @@ public class PickUp : ObjectBase
     public override void InstantiateNewObject(GameObject platformObject, ObjectPanel objectPanel, out Platform platform)
     {
         base.InstantiateNewObject(platformObject, objectPanel, out platform);
-        AddPickup(platformObject);
+        AddPickup(platformObject.transform.GetChild(0).gameObject);
     }
 
     public override void InstantiateOldObject(GameObject platformObject, int state, ObjectPanel panel, out Platform platform)
     {
         base.InstantiateOldObject(platformObject, state, panel, out platform);
-        AddPickup(platformObject);
+        AddPickup(platformObject.transform.GetChild(0).gameObject);
     }
 
     public virtual void AddPickup(GameObject platformObject)

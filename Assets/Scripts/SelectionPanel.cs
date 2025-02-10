@@ -33,10 +33,22 @@ public class SelectionPanel : MonoBehaviour
     WeightedList<ObjectBase> specialList;
     WeightedList<ObjectBase> allList;
 
+    Animator animator;
+    Animator objectButtonsAnimator;
+
+    static SelectionPanel instance;
+    public static SelectionPanel Instance { get { return instance; } }
+
     private void Awake()
     {
         InitializeLists();
         SetNewOptions();
+
+        if (instance == null) { instance = this; }
+        else { Destroy(this); }
+
+        animator = GetComponent<Animator>();
+        animator.enabled = false;
     }
 
     private void InitializeLists()
@@ -47,22 +59,20 @@ public class SelectionPanel : MonoBehaviour
         pickupsList = new WeightedList<ObjectBase>(pickups.Select(x => x.value).ToArray(), pickups.Select(x => x.weight).ToArray());
         specialList = new WeightedList<ObjectBase>(special.Select(x => x.value).ToArray(), special.Select(x => x.weight).ToArray());
         allList = new WeightedList<ObjectBase>(all.Select(x => x.value).ToArray(), all.Select(x => x.weight).ToArray());
+
         buttonTypePairs = new();
         buttonObjectPairs = new();
         foreach (Button button in typeButtons) { buttonTypePairs.Add(button, new()); }
-        foreach (Button button in objectButtons) { buttonObjectPairs.Add(button,  null); }
+        foreach (Button button in objectButtons) { buttonObjectPairs.Add(button, null); }
+        objectButtonsAnimator = objectButtons[0].GetComponentInParent<Animator>();
     }
 
     public void SetNewOptions()
     {
-        for (int i = 0; i < poolsList.max; i++)
-        {
-            Debug.Log(poolsList.Get(i));
-        }
         PlatformPoolType poolType;
         foreach (var button in buttonTypePairs)
         {
-            poolType = poolsList.Get(Random.Range(0, poolsList.max + 1));
+            poolType = poolsList.Get(Random.Range(0, poolsList.max));
             buttonTypePairs[button.Key].poolType = poolType;
             Color color;
 
@@ -94,35 +104,51 @@ public class SelectionPanel : MonoBehaviour
         }
     }
 
+    public void Begin()
+    {
+        Show(animator);
+    }
+
+    public void Show(Animator animator)
+    {
+        animator.enabled = true;
+        animator.Play("Show");
+    }
+
+    public void Hide(Animator animator)
+    {
+        animator.enabled = true;
+        animator.Play("Hide");
+    }
+
+
+
+    public void EnableObjectInteractivity() { MakeInteractable(true, buttonObjectPairs.Keys.ToArray()); }
+    public void DisableObjectInteractivity() { MakeInteractable(false, buttonObjectPairs.Keys.ToArray()); }
+    public void EnableInteractivity() { MakeInteractable(true, buttonTypePairs.Keys.ToArray()); }
+    public void DisableInteractivity() { MakeInteractable(false, buttonTypePairs.Keys.ToArray()); }
+    private void MakeInteractable(bool state, Button[] buttons) { foreach (var button in buttons) { button.interactable = state; } }
+
+    public void StopAnimator() { animator.enabled = false; }
+
     public void ButtonPressed(Button button)
     {
-        WeightedList<ObjectBase> list;
-        switch (buttonTypePairs[button].poolType)
+        WeightedList<ObjectBase> list = buttonTypePairs[button].poolType switch
         {
-            case PlatformPoolType.standardPlatforms:
-                list = standardPlatformsList;
-                break;
-            case PlatformPoolType.allPlatforms:
-                list = allPlatformsList;
-                break;
-            case PlatformPoolType.pickups:
-                list = pickupsList;
-                break;
-            case PlatformPoolType.special:
-                list = specialList;
-                break;
-            default:
-                list = allList;
-                break;
-        }
-
-        foreach (var item in buttonObjectPairs)
+            PlatformPoolType.standardPlatforms => standardPlatformsList,
+            PlatformPoolType.allPlatforms => allPlatformsList,
+            PlatformPoolType.pickups => pickupsList,
+            PlatformPoolType.special => specialList,
+            _ => allList,
+        };
+        foreach (var item in buttonObjectPairs.ToList())
         {
             buttonObjectPairs[item.Key] = list.Get(Random.Range(0, list.max));
             SetButtonSprite(item.Key.transform, buttonObjectPairs[item.Key]);
         }
 
-        // TODO animation to other panel
+        Hide(animator);
+        Show(objectButtonsAnimator);
     }
 
     private void SetButtonSprite(Transform transform, ObjectBase objectBase)
@@ -133,7 +159,16 @@ public class SelectionPanel : MonoBehaviour
         image.SetNativeSize();
     }
 
-    public void AddObjectBase(Button button) { ObjectPanel.Instance.AddButtonData(buttonObjectPairs[button]); }
+    public void AddObjectBase(Button button)
+    {
+        Hide(objectButtonsAnimator);
+        if (ObjectPanel.Instance.AddButtonData(buttonObjectPairs[button])) 
+        {
+            SetNewOptions();
+            Show(animator); 
+        }
+        else { ObjectPanel.Instance.ShowPanel(); }
+    }
 }
 
 public class ButtonData

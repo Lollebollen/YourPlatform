@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1157}
   m_SizeDelta: {x: -1000, y: 329}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8175078239853236720
@@ -90,12 +90,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9fc727d062b8274da3ec173b95e88f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformButtonsParent: {fileID: 0}
+  platformButtonsParent: {fileID: 2092919884760302129}
   platformBase: {fileID: 1173584578038466118, guid: c50c305f0fbb7d74193507f713e1f0a5, type: 3}
   platfromButtons:
+  - {fileID: 2306072570791550570}
+  - {fileID: 7332068497010701345}
   - {fileID: 3862199268490801163}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!95 &5797639852627377933
 Animator:
   serializedVersion: 5
@@ -524,7 +524,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1295173260722769406}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2172762347393088117}
+        m_TargetAssemblyTypeName: SelectionPanel, Assembly-CSharp
+        m_MethodName: ButtonPressed
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 4973533541333717923}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3419000879863526804
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5963252053666169065}
   - component: {fileID: 2172762347393088117}
+  - component: {fileID: 2642463920314834257}
   m_Layer: 5
   m_Name: Type Selection Panel
   m_TagString: Untagged
@@ -693,7 +706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1157}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2172762347393088117
@@ -729,9 +742,9 @@ MonoBehaviour:
     weight: 1
   - value: {fileID: 11400000, guid: 96e5e84c0a872b74480f291d802b3483, type: 2}
     weight: 1
-  - value: {fileID: 0}
+  - value: {fileID: 11400000, guid: 63d336a7a67b9ef4fbe7d3a53116b6b9, type: 2}
     weight: 2
-  - value: {fileID: 0}
+  - value: {fileID: 11400000, guid: 2319ceb787b390640af5c55fae483948, type: 2}
     weight: 2
   pickups:
   - value: {fileID: 11400000, guid: 63926587b4fed074c8be480d8e4acbf7, type: 2}
@@ -766,6 +779,27 @@ MonoBehaviour:
   objectButtons:
   - {fileID: 4470265030853601025}
   - {fileID: 8020596254432609344}
+--- !u!95 &2642463920314834257
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3533205011849463785}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4ed25f66e51d3184eb81a584c0fcbcc4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3905331448323037278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1330,7 +1364,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5771897060960982981}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2172762347393088117}
+        m_TargetAssemblyTypeName: SelectionPanel, Assembly-CSharp
+        m_MethodName: ButtonPressed
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1901009912079323624}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8382490702240414417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1390,7 @@ GameObject:
   - component: {fileID: 6268617103008829580}
   - component: {fileID: 655013058943348879}
   - component: {fileID: 5582772305008627842}
+  - component: {fileID: 7418444048885679213}
   m_Layer: 5
   m_Name: Object Selection Panel
   m_TagString: Untagged
@@ -1369,7 +1416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1093}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7837112374918619157
@@ -1450,6 +1497,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!95 &7418444048885679213
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8382490702240414417}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4feeeeccfc0ddf840be506b04ea8dd3d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8535101740491395530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,6 +1743,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Object Button (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4191875515592387574}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1685,6 +1757,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2040247317337414479, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
   m_PrefabInstance: {fileID: 352034416620027255}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7332068497010701345 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+  m_PrefabInstance: {fileID: 352034416620027255}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1039471493399334166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1776,6 +1859,18 @@ PrefabInstance:
     - target: {fileID: 3653707570257753712, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
       propertyPath: m_Name
       value: Object Button (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2172762347393088117}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddObjectBase
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SelectionPanel, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1890,11 +1985,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Object Button (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4191875515592387574}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+--- !u!114 &2306072570791550570 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+  m_PrefabInstance: {fileID: 4693525779751098172}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6733632359262112883 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2040247317337414479, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
@@ -2108,6 +2218,18 @@ PrefabInstance:
     - target: {fileID: 3653707570257753712, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
       propertyPath: m_Name
       value: Object Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2172762347393088117}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddObjectBase
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999174486394046806, guid: 371b392b7e15a654da18f95b2746734e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SelectionPanel, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

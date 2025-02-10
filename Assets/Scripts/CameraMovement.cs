@@ -10,10 +10,21 @@ public class CameraMovement : MonoBehaviour
     ObjectPanel panel;
 
     [SerializeField] float smooth;
-    public CameraMode cameraMode = CameraMode.Follow;
+    public CameraMode cameraMode = CameraMode.FollowPlayer;
+    [HideInInspector] public Vector3 targerPoint;
 
     Vector2 cameraSize;
     Vector2 lastTouchPos;
+
+    static CameraMovement instance;
+    static public CameraMovement Instance {  get { return instance; } }
+
+    private void Awake()
+    {
+        if (instance == null) { instance = this; }
+        else { Destroy(this); }
+        cameraMode = CameraMode.FollowPoint;
+    }
 
     private void Start()
     {
@@ -32,19 +43,24 @@ public class CameraMovement : MonoBehaviour
     {
         switch (cameraMode)
         {
-            case CameraMode.Follow:
+            case CameraMode.FollowPlayer:
                 FollowPlayer();
                 break;
             case CameraMode.Drag:
                 Drag();
                 break;
+            case CameraMode.FollowPoint:
+                Follow(targerPoint);
+                break;
         }
     }
 
-    private void FollowPlayer()
+    private void FollowPlayer() { Follow(playerTransform.position + new Vector3(playerMovement.direction, 0, 0)); }
+
+    private void Follow(Vector3 target)
     {
         Vector3 oldPos = transform.position;
-        Vector3 newPos = Vector3.Lerp(oldPos, playerTransform.position + new Vector3(playerMovement.direction, 0, 0), smooth);
+        Vector3 newPos = Vector3.Lerp(oldPos, target, smooth);
         newPos = ClampToBounds(newPos);
         newPos.z = oldPos.z;
         transform.position = newPos;
@@ -73,7 +89,7 @@ public class CameraMovement : MonoBehaviour
 
     public void SetToFollow()
     {
-        cameraMode = CameraMode.Follow;
+        cameraMode = CameraMode.FollowPlayer;
     }
 
     public void SetToDrag()
@@ -96,7 +112,8 @@ public class CameraMovement : MonoBehaviour
 
 public enum CameraMode : byte
 {
-    Follow,
+    FollowPoint,
+    FollowPlayer,
     Drag,
     StayStill
 }
