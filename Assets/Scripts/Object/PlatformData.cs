@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public struct PlatformData
 {
     public float x;
@@ -18,7 +17,7 @@ public struct PlatformData
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct PlatformDataCollection
 {
     public PlatformData[] Collection;
@@ -26,19 +25,19 @@ public struct PlatformDataCollection
     public string user;
 }
 
-[Serializable]
+[System.Serializable]
 public struct GameDatas
 {
     public PlatformDataCollection[] gameData;
 }
 
-[Serializable]
+[System.Serializable]
 public struct GameStates
 {
     public Active[] activeStatus;
 }
 
-[Serializable]
+[System.Serializable]
 public struct Active
 {
     public bool isActive;
@@ -51,9 +50,22 @@ public struct Active
     }
 }
 
-[Serializable]
+[System.Serializable]
 public struct WeightedValue <type>
 {
     public type value;
     public int weight;
+}
+
+[System.Serializable]
+public struct Ghost
+{
+    public float[] times;
+    public Vector2[] positions;
+
+    public Ghost(float[] times, Vector2[] positions)
+    {
+        this.times = times;
+        this.positions = positions;
+    }
 }

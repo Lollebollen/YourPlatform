@@ -48,7 +48,7 @@ public class MainMenuButtons : MonoBehaviour
     {
         GameStates gameStates = JsonUtility.FromJson<GameStates>(snapShot.GetRawJsonValue());
 
-        for (int i = 0; i < gameStates.activeStatus.Length; i++)
+        for (int i = 0; i < gameStates.activeStatus.Length; i++) // TODO make it go in a random order
         {
             long time = gameStates.activeStatus[i].timeSetActive;
             if (!gameStates.activeStatus[i].isActive || (time < System.DateTime.UtcNow.Ticks && new System.DateTime(time).Day != System.DateTime.UtcNow.Day))

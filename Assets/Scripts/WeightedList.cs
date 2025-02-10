@@ -14,7 +14,6 @@ public class WeightedList<type>
         this.array = array;
         this.weights = weights;
         count = array.Length - 1;
-        //Sort(); // is sort needed?
         CalculateCDF();
     }
 
@@ -31,13 +30,13 @@ public class WeightedList<type>
             newIntArray[i] = weights[i];
         }
         count = num;
-        //Sort(); // is sort needed?
         CalculateCDF();
     }
 
     public void Sort()
     {
         QuickSort(ref weights, ref array, 0, weights.Length - 1);
+        CalculateCDF();
     }
 
     public type Get(int weight)
@@ -58,7 +57,7 @@ public class WeightedList<type>
         }
         i = low + (high - low) / 2;
         if (i > array.Length - 1) { throw new ("Weight out of bounds"); } 
-        else { return array[i]; } // TODO fix this returning wrong
+        else { return array[i]; }
     }
 
     private void CalculateCDF()

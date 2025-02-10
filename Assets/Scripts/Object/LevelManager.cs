@@ -45,7 +45,7 @@ public class LevelManager : MonoBehaviour
         if (gameIndex == -1) { return; }
         bool task1 = false;
         bool task2 = false;
-        bool task3 = true; // TODO set false and save replay in database
+        bool task3 = false;
         database.RootReference.Child("games").Child("gameData").Child(gameIndex.ToString()).
             SetRawJsonValueAsync(SaveLevel()).ContinueWithOnMainThread(task =>
         {
@@ -60,6 +60,13 @@ public class LevelManager : MonoBehaviour
             task2 = task.IsCompleted;
             SyncDataSetting(task1, task2, task3);
         });
+        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
+            SetRawJsonValueAsync(ReplaySaver.Instance.GetReplay()).ContinueWithOnMainThread(task =>
+            {
+                if (task.Exception != null) { Debug.Log(task.Exception); }
+                task3 = task.IsCompleted;
+                SyncDataSetting(task1, task3, task2);
+            });
     }
 
     private void SyncDataSetting(bool task1, bool task2, bool task3)
