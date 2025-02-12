@@ -13,8 +13,14 @@ public class CenimaticCamera : MonoBehaviour
     [SerializeField] float deadZone;
     [SerializeField] float lerpAmount;
 
+    static CenimaticCamera instance;
+    public static CenimaticCamera Instance {  get { return instance; } }
+
     private void Awake()
     {
+        if (instance == null) { instance = this; }
+        else { Destroy(this); }
+
         int num = transform.childCount;
         points = new Vector3[num];
         for (int i = 0; i < num; i++)
@@ -24,7 +30,7 @@ public class CenimaticCamera : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void Begin()
     {
         cameraMovement = CameraMovement.Instance;
         cameraMovement.transform.position = new Vector3(points[0].x, points[0].y, cameraMovement.transform.position.z);

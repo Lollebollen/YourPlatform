@@ -11,6 +11,7 @@ public class MainMenuButtons : MonoBehaviour
     FirebaseDatabase database;
 
     [SerializeField] Button startButton;
+    [SerializeField] Button replayButton;
     [SerializeField] GameDatas gameDatasForTesting;
     [SerializeField] GameStates GameStatesForTestting;
 
@@ -39,23 +40,46 @@ public class MainMenuButtons : MonoBehaviour
         {
             if (task.Exception != null) { Debug.Log(task.Exception); }
 
-            DataSnapshot snapshot = task.Result;
-            CheckForOpenGame(snapshot);
+            CheckForOpenGame(task.Result);
         });
+    }
+
+    public void WatchReplay()
+    {
+        replayButton.interactable = false;
+
+        database.RootReference.Child("replays").Child(auth.CurrentUser.UserId).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null) { Debug.Log(task.Exception); }
+            DataSnapshot snapshot = task.Result;
+
+            if (snapshot.Exists && snapshot.ChildrenCount > 0) { BeginReplay(snapshot); }
+            else { FaildReplayFetch(); }
+        });
+    }
+
+    private void FaildReplayFetch()
+    {
+        Debug.LogWarning("There was no replay to watch");
+        replayButton.interactable = true;
+    }
+
+    private void BeginReplay(DataSnapshot snapshot)
+    {
+        Debug.Log(snapshot.Value); 
     }
 
     private void CheckForOpenGame(DataSnapshot snapShot)
     {
         GameStates gameStates = JsonUtility.FromJson<GameStates>(snapShot.GetRawJsonValue());
 
-        for (int i = 0; i < gameStates.activeStatus.Length; i++) // TODO make it go in a random order
+        for (int i = 0; i < gameStates.activeStatus.Length; i++) // TODO make it random order
         {
             long time = gameStates.activeStatus[i].timeSetActive;
             if (!gameStates.activeStatus[i].isActive || (time < System.DateTime.UtcNow.Ticks && new System.DateTime(time).Day != System.DateTime.UtcNow.Day))
             {
                 SetGameActive(i);
                 FetchGameData(i);
-                // things to save to game scene game index, time and platformdata
                 return;
             }
         }

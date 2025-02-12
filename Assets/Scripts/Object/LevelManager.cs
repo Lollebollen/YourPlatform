@@ -21,6 +21,8 @@ public class LevelManager : MonoBehaviour
     public string newLevelData;
     public long startTime;
     public int gameIndex = -1;
+    public bool isReplay;
+    public Ghost ghost;
 
     PlatformDataCollection gameData;
 
@@ -36,45 +38,45 @@ public class LevelManager : MonoBehaviour
     public void StartGame() // gets called from a gameObject in game scene
     {
         LoadData();
-        if (gameData.Collection == null) { return; }
         LoadLevel();
     }
 
     public void OnLevelComplete()
     {
         if (gameIndex == -1) { return; }
-        bool task1 = false;
-        bool task2 = false;
-        bool task3 = false;
         database.RootReference.Child("games").Child("gameData").Child(gameIndex.ToString()).
-            SetRawJsonValueAsync(SaveLevel()).ContinueWithOnMainThread(task =>
+            SetRawJsonValueAsync(SaveLevel(out PlatformDataCollection replayMap)).ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null) { Debug.Log(task.Exception); }
-            task1 = task.IsCompleted;
-            SyncDataSetting(task1, task2, task3);
         });
         database.RootReference.Child("gameStates").Child("activeStatus").Child(gameIndex.ToString()).
             SetRawJsonValueAsync(JsonUtility.ToJson(new Active(false, startTime))).ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null) { Debug.Log(task.Exception); }
-            task2 = task.IsCompleted;
-            SyncDataSetting(task1, task2, task3);
+        });
+        Ghost ghost = ReplaySaver.Instance.GetReplay();
+        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
+            Child("x").SetValueAsync(ghost.x).ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null) { Debug.Log(task.Exception); }
         });
         database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
-            SetRawJsonValueAsync(ReplaySaver.Instance.GetReplay()).ContinueWithOnMainThread(task =>
-            {
-                if (task.Exception != null) { Debug.Log(task.Exception); }
-                task3 = task.IsCompleted;
-                SyncDataSetting(task1, task3, task2);
-            });
-    }
-
-    private void SyncDataSetting(bool task1, bool task2, bool task3)
-    {
-        if (task1 && task2 && task3)
+            Child("y").SetValueAsync(ghost.y).ContinueWithOnMainThread(task =>
         {
-            SceneManager.LoadScene(1);
-        }
+            if (task.Exception != null) { Debug.Log(task.Exception); }
+        });
+        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
+            Child("time").SetValueAsync(ghost.times).ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null) { Debug.Log(task.Exception); }
+        });
+        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
+            Child("map").SetRawJsonValueAsync(JsonUtility.ToJson(replayMap)).ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null) { Debug.Log(task.Exception); }
+        });
+
+        SceneManager.LoadScene(1); // TODO add more effects/juice
     }
 
     #region debug Functions
@@ -86,7 +88,7 @@ public class LevelManager : MonoBehaviour
         }
 
         LoadData();
-        if (gameData.Collection == null) { return; }
+        if (gameData.collection == null) { return; }
         LoadLevel();
     }
 
@@ -97,7 +99,7 @@ public class LevelManager : MonoBehaviour
 
     public void DebugSave()
     {
-        newLevelData = SaveLevel();
+        newLevelData = SaveLevel(out _);
     }
     #endregion
 
@@ -105,7 +107,6 @@ public class LevelManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(oldLevelData)) { return; }
         var oldPlatformData = JsonUtility.FromJson<PlatformDataCollection>(oldLevelData);
-        if (oldPlatformData.Collection == null) { return; }
         gameData = oldPlatformData;
     }
 
@@ -114,25 +115,30 @@ public class LevelManager : MonoBehaviour
         Instantiate(maps[gameData.map]);
         ObjectPanel panel = FindObjectOfType<ObjectPanel>();
 
-        foreach (PlatformData platformData in gameData.Collection)
+        if (gameData.collection == null) { return; }
+        foreach (PlatformData platformData in gameData.collection)
         {
             var platfromObject = Instantiate(basePlatformObject, new Vector3(platformData.x, platformData.y, 0), Quaternion.identity);
             ObjectRefrenceTable.Instance.objectBases[platformData.ID].InstantiateOldObject(platfromObject, platformData.state, panel, out _);
         }
     }
 
-    public string SaveLevel()
+    public string SaveLevel(out PlatformDataCollection replayMap)
     {
         List<PlatformData> platformDatas = new();
-        foreach (Platform platform in FindObjectsOfType<Platform>())
+        Platform[] allPlatforms = FindObjectsOfType<Platform>();
+        foreach (Platform platform in allPlatforms)
         {
             if (!platform.isNew) { continue; }
             platformDatas.Add(new PlatformData((Vector2)platform.transform.position, platform.ID, platform.state));
         }
         PlatformDataCollection platformDataCollection = new PlatformDataCollection();
-        platformDataCollection.Collection = platformDatas.ToArray();
+        platformDataCollection.collection = platformDatas.ToArray();
         platformDataCollection.map = gameData.map;
         platformDataCollection.user = auth.CurrentUser.UserId;
+
+        if (ReplaySaver.Instance != null) { replayMap = ReplaySaver.Instance.SaveMap(allPlatforms, platformDataCollection); }
+        else { replayMap = new(); }
 
         return JsonUtility.ToJson(platformDataCollection);
     }

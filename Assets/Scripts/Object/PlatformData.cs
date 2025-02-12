@@ -20,7 +20,7 @@ public struct PlatformData
 [System.Serializable]
 public struct PlatformDataCollection
 {
-    public PlatformData[] Collection;
+    public PlatformData[] collection;
     public int map;
     public string user;
 }
@@ -43,7 +43,7 @@ public struct Active
     public bool isActive;
     public long timeSetActive;
 
-    public Active (bool isActive, long timeSetActive)
+    public Active(bool isActive, long timeSetActive)
     {
         this.isActive = isActive;
         this.timeSetActive = timeSetActive;
@@ -51,21 +51,39 @@ public struct Active
 }
 
 [System.Serializable]
-public struct WeightedValue <type>
+public struct WeightedValue<type>
 {
     public type value;
     public int weight;
 }
 
 [System.Serializable]
-public struct Ghost
+public class Ghost
 {
     public float[] times;
-    public Vector2[] positions;
+    public float[] x;
+    public float[] y;
 
-    public Ghost(float[] times, Vector2[] positions)
+    public Ghost(float[] times, float[] x, float[] y)
     {
         this.times = times;
-        this.positions = positions;
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class GhostWithMap
+{
+    public PlatformDataCollection platformDataCollection;
+    public float[] times;
+    public float[] x;
+    public float[] y;
+
+    public GhostWithMap(PlatformDataCollection platformDataCollection, float[] times, float[] x, float[] y)
+    {
+        this.platformDataCollection = platformDataCollection;
+        this.times = times;
+        this.x = x;
+        this.y = y;
     }
 }
