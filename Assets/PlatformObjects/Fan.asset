@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Fan
   m_EditorClassIdentifier: 
   ID: 4
+  platformType: {fileID: 0}
   image: {fileID: 21300000, guid: 17baea97631b3cd408114968599dd804, type: 3}
   placeSize: {x: 1, y: 0.13}
-  collider: {fileID: 0}
+  placeCollider: {fileID: 0}
   platformSize: {x: 1, y: 0.13}
   boxCollider: {fileID: 0}
-  controller: {fileID: 9100000, guid: 106b58886416e904eaad1b0b2a8a68ad, type: 2}
+  visuals: {fileID: 1289851148977021844, guid: 88822a67c90945a49bb9968d4ca0ce33, type: 3}
   colliderOffset: -0.186
   fanArea: {fileID: 4011896997725427131, guid: 4e5e8197ffabb1147bf65a7b436c40a4, type: 3}

@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "new fan object", menuName = "fan")]
 public class Fan : BasicPlatform
 {
-    public AnimatorController controller;
+    public GameObject visuals;
     public float colliderOffset = -0.186f;
     public GameObject fanArea;
 
@@ -18,18 +17,17 @@ public class Fan : BasicPlatform
         AddFan(platformObject);
     }
 
-    private void AddFan(GameObject platformObject)
-    {
-
-        platformObject.AddComponent<Animator>().runtimeAnimatorController = controller;
-        boxCollider.offset = new Vector2(0, colliderOffset);
-        Instantiate(fanArea, platformObject.transform.position, Quaternion.identity, platformObject.transform);
-    }
-
     public override void InstantiateOldObject(GameObject platformObject, int state, ObjectPanel panel, out Platform platform)
     {
         base.InstantiateOldObject(platformObject, state, panel, out platform);
 
         AddFan(platformObject);
+    }
+
+    private void AddFan(GameObject platformObject)
+    {
+        Instantiate(visuals, platformObject.transform);
+        boxCollider.offset = new Vector2(0, colliderOffset);
+        Instantiate(fanArea, platformObject.transform.position, Quaternion.identity, platformObject.transform);
     }
 }

@@ -9,6 +9,9 @@ public class FanEnabler : MonoBehaviour
     private void Start()
     {
         ObjectPanel.Instance.DonePlacingPlatforms += EnableFan;
+        ObjectPanel.Instance.DonePlacingPlatforms += removeSprite;
+        ObjectPanel.Instance.PlacedOnePlatform += removeSprite;
+        GhostHandler.Instance.startGhost += removeSprite;
     }
 
     public void EnableFan()
@@ -17,8 +20,16 @@ public class FanEnabler : MonoBehaviour
         col.enabled = true;
     }
 
+    public void removeSprite()
+    {
+        transform.parent.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
     private void OnDestroy()
     {
         ObjectPanel.Instance.DonePlacingPlatforms -= EnableFan;
+        ObjectPanel.Instance.DonePlacingPlatforms -= removeSprite;
+        ObjectPanel.Instance.PlacedOnePlatform -= removeSprite;
+        GhostHandler.Instance.startGhost -= removeSprite;
     }
 }
