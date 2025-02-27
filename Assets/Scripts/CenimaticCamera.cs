@@ -37,8 +37,9 @@ public class CenimaticCamera : MonoBehaviour
         cameraMovement.targerPoint = points[0];
     }
 
-    private void Update() // TODO bezier curves intead? or just use lerp the intended way
+    private void Update() // TODO bezier curves intead? or just don't missuse lerp way dumbass
     {
+        if (cameraMovement == null) { return; }
         Vector3 currentPos = cameraMovement.transform.position;
         currentPos.z = 0;
         if (deadZone * deadZone > (cameraMovement.targerPoint - points[currentPoint]).sqrMagnitude || currentPos == lastPos)

@@ -29,6 +29,7 @@ public class TurretBase : ObjectBase
         turret.shootOffset = shootOffset;
         turret.shootDelay = shootDelay;
         turret.shootSpeed = shootSpeed;
-        if (panel != null) { panel.DonePlacingPlatforms += turret.BeginShoot; }
+        if (LevelManager.Instance.isReplay) { turret.BeginShoot(); }
+        else if (panel != null) { panel.DonePlacingPlatforms += turret.BeginShoot; }
     }
 }

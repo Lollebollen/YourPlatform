@@ -55,6 +55,7 @@ public class ObjectPanel : MonoBehaviour
     /// <returns></returns>
     public bool AddButtonData(ObjectBase objectBase)
     {
+        if (platfromButtons.Length <= 0) { return false; }
         SetupButton(platfromButtons[0], objectBase);
         platfromButtons = platfromButtons[1..];
         return platfromButtons.Length > 0;
@@ -72,6 +73,7 @@ public class ObjectPanel : MonoBehaviour
 
     public void PlacePlatform(Button button)
     {
+        button.interactable = false;
         placingButton = button;
         Vector3 placePos = Camera.main.transform.position;
         placePos.z = 0;
@@ -96,6 +98,7 @@ public class ObjectPanel : MonoBehaviour
 
     public void PlacingCancelled()
     {
+        placingButton.interactable = true;
         platformButtonsParent.SetActive(false);
         ShowPanel();
         Destroy(currentPlatformObject);

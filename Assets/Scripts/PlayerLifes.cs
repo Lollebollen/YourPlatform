@@ -7,6 +7,7 @@ public class PlayerLifes : MonoBehaviour
     [SerializeField] int lifes = 3;
     [SerializeField] GameObject lifeIcon;
     [SerializeField] float lifeIconsOffset;
+    [SerializeField] GameObject resetButton;
 
     List<GameObject> lifeContainers = new();
 
@@ -24,7 +25,13 @@ public class PlayerLifes : MonoBehaviour
     private void Start()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
+        ObjectPanel.Instance.DonePlacingPlatforms += Begin;
+    }
+
+    public void Begin()
+    {
         ChangeLifeIcons();
+        resetButton.SetActive(true);
     }
 
     public void GainLife()

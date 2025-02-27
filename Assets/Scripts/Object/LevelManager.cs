@@ -54,28 +54,18 @@ public class LevelManager : MonoBehaviour
         {
             if (task.Exception != null) { Debug.Log(task.Exception); }
         });
-        Ghost ghost = ReplaySaver.Instance.GetReplay();
-        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
-            Child("x").SetValueAsync(ghost.x).ContinueWithOnMainThread(task =>
-        {
-            if (task.Exception != null) { Debug.Log(task.Exception); }
-        });
-        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
-            Child("y").SetValueAsync(ghost.y).ContinueWithOnMainThread(task =>
-        {
-            if (task.Exception != null) { Debug.Log(task.Exception); }
-        });
-        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
-            Child("time").SetValueAsync(ghost.times).ContinueWithOnMainThread(task =>
-        {
-            if (task.Exception != null) { Debug.Log(task.Exception); }
-        });
-        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).
-            Child("map").SetRawJsonValueAsync(JsonUtility.ToJson(replayMap)).ContinueWithOnMainThread(task =>
+
+        database.RootReference.Child("replays").Child(gameData.user).Child(auth.CurrentUser.UserId).SetRawJsonValueAsync(JsonUtility.
+            ToJson(new GhostWithMap(replayMap, ReplaySaver.Instance.GetReplay()))).ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null) { Debug.Log(task.Exception); }
         });
 
+        SceneManager.LoadScene(1); // TODO add more effects/juice
+    }
+
+    public void OnReplayComplete()
+    {
         SceneManager.LoadScene(1); // TODO add more effects/juice
     }
 

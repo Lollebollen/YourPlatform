@@ -17,11 +17,16 @@ public class GhostHandler : MonoBehaviour
     {
         Destroy(player);
         ghost.SetGhost(LevelManager.Instance.ghost);
+        CameraMovement.Instance.cameraMode = CameraMode.FollowPlayer;
+        CameraMovement.Instance.playerTransform = ghost.transform;
+        Destroy(ReplaySaver.Instance.gameObject);
     }
 
     private void BeginGame()
     {
         Destroy(ghost.gameObject);
+        CameraMovement.Instance.cameraMode = CameraMode.FollowPoint;
+        CameraMovement.Instance.playerTransform = player.transform;
         CenimaticCamera.Instance.Begin();
     }
 }

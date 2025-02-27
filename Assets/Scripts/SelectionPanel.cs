@@ -24,6 +24,12 @@ public class SelectionPanel : MonoBehaviour
     [SerializeField] Button[] typeButtons;
     [SerializeField] Button[] objectButtons;
 
+    [SerializeField] Sprite standardPlatformImage;
+    [SerializeField] Sprite allPlatformsImage;
+    [SerializeField] Sprite pickupsImage;
+    [SerializeField] Sprite specialImage;
+    [SerializeField] Sprite allImage;
+
     Dictionary<Button, ButtonData> buttonTypePairs;
     Dictionary<Button, ObjectBase> buttonObjectPairs;
     WeightedList<PlatformPoolType> poolsList;
@@ -74,33 +80,33 @@ public class SelectionPanel : MonoBehaviour
         {
             poolType = poolsList.Get(Random.Range(0, poolsList.max));
             buttonTypePairs[button.Key].poolType = poolType;
-            Color color;
+            Sprite sprite;
 
             switch (poolType) // TODO visuals
             {
                 case PlatformPoolType.standardPlatforms:
                     buttonTypePairs[button.Key].list = standardPlatformsList;
-                    color = Color.white;
+                    sprite = standardPlatformImage;
                     break;
                 case PlatformPoolType.allPlatforms:
                     buttonTypePairs[button.Key].list = allPlatformsList;
-                    color = Color.red;
+                    sprite = allPlatformsImage;
                     break;
                 case PlatformPoolType.pickups:
                     buttonTypePairs[button.Key].list = pickupsList;
-                    color = Color.green;
+                    sprite = pickupsImage;
                     break;
                 case PlatformPoolType.special:
                     buttonTypePairs[button.Key].list = specialList;
-                    color = Color.blue;
+                    sprite = specialImage;
                     break;
                 default:
                     buttonTypePairs[button.Key].list = allList;
-                    color = Color.yellow;
+                    sprite = allImage;
                     break;
             }
 
-            button.Key.gameObject.GetComponent<Image>().color = color;
+            button.Key.transform.GetChild(0).GetComponent<Image>().sprite = sprite;
         }
     }
 

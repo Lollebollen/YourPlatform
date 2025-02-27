@@ -20,7 +20,11 @@ public class StartMenuButtons : MonoBehaviour
     Animator credentialsAnimator;
     Image credentialsPanel;
 
-    public bool credentialActive = false;
+    [Header("Cred Colors")]
+    [SerializeField] Color signInColor;
+    [SerializeField] Color registerColor;
+
+    [HideInInspector] public bool credentialActive = false;
     public enum RegisterOrSignIn
     {
         None,
@@ -42,7 +46,7 @@ public class StartMenuButtons : MonoBehaviour
             {
                 
                 // TODO check if user has been deleted
-                //LoadMainMenu();
+                LoadMainMenu();
             }
         });
         credentialsAnimator = credentials.GetComponent<Animator>();
@@ -53,7 +57,7 @@ public class StartMenuButtons : MonoBehaviour
     {
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(Register);
-        credentialsPanel.color = Color.blue;
+        credentialsPanel.color = registerColor;
         CredentialsPanelToggle(RegisterOrSignIn.Register);
     }
 
@@ -61,7 +65,7 @@ public class StartMenuButtons : MonoBehaviour
     {
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(SignIn);
-        credentialsPanel.color = Color.green;
+        credentialsPanel.color = signInColor;
         CredentialsPanelToggle(RegisterOrSignIn.SignIn);
     }
 

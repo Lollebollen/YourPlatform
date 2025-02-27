@@ -75,15 +75,13 @@ public class Ghost
 public class GhostWithMap
 {
     public PlatformDataCollection platformDataCollection;
-    public float[] times;
-    public float[] x;
-    public float[] y;
+    public Ghost ghost;
 
-    public GhostWithMap(PlatformDataCollection platformDataCollection, float[] times, float[] x, float[] y)
+    public GhostWithMap() { }
+
+    public GhostWithMap(PlatformDataCollection platformDataCollection, Ghost ghost)
     {
         this.platformDataCollection = platformDataCollection;
-        this.times = times;
-        this.x = x;
-        this.y = y;
+        this.ghost = ghost;
     }
 }

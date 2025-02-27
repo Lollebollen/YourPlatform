@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    public Transform playerTransform;
+
     PlayerMovement playerMovement;
-    Transform playerTransform;
     MapBounds bounds;
     ObjectPanel panel;
 
@@ -23,7 +24,6 @@ public class CameraMovement : MonoBehaviour
     {
         if (instance == null) { instance = this; }
         else { Destroy(this); }
-        cameraMode = CameraMode.FollowPoint;
     }
 
     private void Start()
@@ -31,7 +31,6 @@ public class CameraMovement : MonoBehaviour
         playerMovement = FindObjectOfType<PlayerMovement>();
         panel = FindObjectOfType<ObjectPanel>();
         bounds = FindObjectOfType<MapBounds>();
-        playerTransform = playerMovement.transform;
         panel.StartedPlacingPlatforms += SetToStayStill;
         panel.PlacedOnePlatform += SetToDrag;
         panel.DonePlacingPlatforms += SetToFollow;

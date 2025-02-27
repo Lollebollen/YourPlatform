@@ -28,18 +28,16 @@ public class PlayerMovement : MonoBehaviour
     bool grounded = false;
     int lastDirection = -1;
     int jumpNum;
-    float colliderOffet;
     float lastInput;
     Vector3 spawnPosition;
-    Collider2D wall;
-    Dictionary<Collider2D, byte> grounds = new(); 
+    HashSet<Collider2D> walls = new();
+    HashSet<Collider2D> grounds = new();
     public HashSet<SlimePlatform> slimes = new HashSet<SlimePlatform>();
 
     private void Awake()
     {
         rigid2D = GetComponent<Rigidbody2D>();
         circleCollider = GetComponent<CircleCollider2D>();
-        colliderOffet = circleCollider.bounds.extents.y;
         var objectPanel = FindObjectOfType<ObjectPanel>();
         if (objectPanel != null)
         {
@@ -58,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GroundCheck();
         Move();
         ChangeGravityScale(baseGravity, gravityTweak);
         if (wallGliding) { ClampVelocity(); }
@@ -67,20 +64,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         HandleInput();
-    }
-
-    private void GroundCheck()
-    {
-        if (grounded)
-        {
-            jumpNum = 0;
-            if (wallGliding)
-            {
-                direction = -lastDirection;
-                wallGliding = false;
-            }
-        }
-
     }
 
     private void Move()
@@ -112,11 +95,15 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         lastInput = Time.time;
-        if (direction == 0) { direction = -lastDirection; wallGliding = false; }
-        else 
+        if (direction == 0)
+        {
+            direction = -lastDirection;
+            wallGliding = false;
+        }
+        else
         {
             if (jumpNum >= jumpNumMax) { return; }
-            jumpNum++; 
+            if (!grounded) { jumpNum++; }
         }
         groundPounding = false;
 
@@ -175,9 +162,10 @@ public class PlayerMovement : MonoBehaviour
         lastDirection = -1;
         wallGliding = false;
         groundPounding = false;
-        wall = null;
         rigid2D.velocity = Vector3.zero;
         transform.position = spawnPosition;
+        grounds = new();
+        walls = new();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -194,33 +182,33 @@ public class PlayerMovement : MonoBehaviour
                 if (groundPounding) { direction = lastDirection; groundPounding = false; }
                 if (point.point.y > pos.y) { continue; }
                 grounded = true;
-                if (grounds.ContainsKey(collision.collider)) { grounds.Add(collision.collider, default); }
+                if (grounded) { jumpNum = 0; }
+                if (!grounds.Contains(collision.collider)) { grounds.Add(collision.collider); }
                 continue;
             }
             if (dot > 0) { continue; }
             else
             {
-                if (direction != 0) { lastDirection = direction; }
-                direction = 0;
-                wallGliding = true;
-                wall = collision.collider;
+                if (grounded) { (lastDirection, direction) = (direction, lastDirection); }
+                else
+                {
+                    if (direction != 0) { lastDirection = direction; }
+                    direction = 0;
+                    wallGliding = true;
+                    if (!walls.Contains(collision.collider)) { walls.Add(collision.collider); }
+                }
             }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (wallGliding && collision.collider == wall)
-        {
-            wall = null;
-            wallGliding = false;
-            if (direction == 0) { direction = lastDirection; }
-        }
-        else
-        {
-            if (grounds.ContainsKey(collision.collider)) { grounds.Remove(collision.collider); }
-            grounded = grounds.Count > 0;
-        }
+        if (collision == null) { return; }
+        if (grounds.Contains(collision.collider)) { grounds.Remove(collision.collider); }
+        if (walls.Contains(collision.collider)) { walls.Remove(collision.collider); }
+        grounded = grounds.Count != 0;
 
+        wallGliding = false;
+        if (direction == 0) { direction = lastDirection; }
     }
 }

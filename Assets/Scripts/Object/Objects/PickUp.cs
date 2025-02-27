@@ -23,5 +23,6 @@ public class PickUp : ObjectBase
         CircleCollider2D circleCollider = platformObject.AddComponent<CircleCollider2D>();
         circleCollider.radius = radius;
         circleCollider.isTrigger = true;
+        if (LevelManager.Instance.isReplay) { platformObject.AddComponent<Rigidbody2D>().gravityScale = 0; }
     }
 }

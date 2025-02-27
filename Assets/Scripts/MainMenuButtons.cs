@@ -1,6 +1,7 @@
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ public class MainMenuButtons : MonoBehaviour
     string gameData;
     int gameStateindex = -2;
     long startTime;
+    Ghost ghost;
 
     private void Awake()
     {
@@ -58,15 +60,24 @@ public class MainMenuButtons : MonoBehaviour
         });
     }
 
+    private void BeginReplay(DataSnapshot snapshot)
+    {
+        GhostWithMap ghostWithMap = new();
+        foreach (DataSnapshot item in snapshot.Children)
+        {
+            ghostWithMap = JsonUtility.FromJson<GhostWithMap>(item.GetRawJsonValue());
+            if (ghostWithMap != null) { break; }
+        }
+        if (ghostWithMap == null) { FaildReplayFetch(); }
+        gameData = JsonUtility.ToJson(ghostWithMap.platformDataCollection);
+        ghost = ghostWithMap.ghost;
+        StartGame(true);
+    }
+
     private void FaildReplayFetch()
     {
         Debug.LogWarning("There was no replay to watch");
         replayButton.interactable = true;
-    }
-
-    private void BeginReplay(DataSnapshot snapshot)
-    {
-        Debug.Log(snapshot.Value); 
     }
 
     private void CheckForOpenGame(DataSnapshot snapShot)
@@ -98,7 +109,7 @@ public class MainMenuButtons : MonoBehaviour
             {
                 gameStateindex = i;
                 startTime = active.timeSetActive;
-                TryToStartGame();
+                TryToStartGame(false);
             }
         });
     }
@@ -112,20 +123,33 @@ public class MainMenuButtons : MonoBehaviour
             {
                 gameDataindex = i;
                 gameData = task.Result.GetRawJsonValue();
-                TryToStartGame();
+                TryToStartGame(false);
             }
         });
     }
 
-    private void TryToStartGame()
+    private void TryToStartGame(bool isReplay)
     {
         if (gameDataindex == gameStateindex && gameData != null && gameData.Length > 1 && startTime != default)
         {
-            Debug.Log("starting new game");
-            LevelManager.Instance.gameIndex = gameDataindex;
-            LevelManager.Instance.oldLevelData = gameData;
-            LevelManager.Instance.startTime = startTime;
-            SceneManager.LoadScene(2);
+            StartGame(isReplay);
         }
+    }
+
+    private void StartGame(bool isReplay)
+    {
+        Debug.Log("starting new game");
+        LevelManager.Instance.oldLevelData = gameData;
+        LevelManager.Instance.isReplay = isReplay;
+        if (isReplay)
+        {
+            LevelManager.Instance.ghost = ghost;
+        }
+        else
+        {
+            LevelManager.Instance.startTime = startTime;
+            LevelManager.Instance.gameIndex = gameDataindex;
+        }
+        SceneManager.LoadScene(2);
     }
 }
